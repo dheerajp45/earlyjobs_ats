@@ -106,18 +106,20 @@ export function Sidebar({
         </nav>
       </div>
 
-      {/* System Status Footer */}
+      {/* Recruiter Workspace Profile */}
       <div className="p-4 border-t border-zinc-100 dark:border-zinc-800/80">
-        <div className="rounded-xl p-3 bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-              PostgreSQL Connected
-            </span>
+        <div className="flex items-center gap-3 px-2 py-1.5 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900/60 transition-colors">
+          <div className="h-8 w-8 rounded-full bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
+            HR
           </div>
-          <p className="text-[11px] text-zinc-400 mt-0.5">
-            Prisma ORM • Next.js API
-          </p>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+              Recruiter Workspace
+            </p>
+            <p className="text-[11px] text-zinc-400 truncate">
+              EarlyJobs Hiring Team
+            </p>
+          </div>
         </div>
       </div>
     </aside>
