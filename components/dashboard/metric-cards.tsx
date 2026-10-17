@@ -56,27 +56,27 @@ export function MetricCards({
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {cards.map((c) => {
         const Icon = c.icon;
         return (
           <div
             key={c.label}
-            className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-5 shadow-xs hover:shadow-md transition-shadow"
+            className="rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-4 shadow-xs hover:shadow-md transition-shadow"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 {c.label}
               </span>
-              <div className={`p-2.5 rounded-xl ${c.bg} ${c.color} border ${c.border}`}>
-                <Icon className="h-5 w-5" />
+              <div className={`p-2 rounded-xl ${c.bg} ${c.color} border ${c.border}`}>
+                <Icon className="h-4.5 w-4.5" />
               </div>
             </div>
-            <div className="mt-3">
-              <div className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <div className="mt-2">
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
                 {c.value}
               </div>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 {c.description}
               </p>
             </div>

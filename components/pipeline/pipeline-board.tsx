@@ -238,9 +238,9 @@ export function PipelineBoard({
       <div
         ref={scrollContainerRef}
         onDragOver={handleContainerDragOver}
-        className="w-full overflow-x-auto pb-4 scroll-smooth"
+        className="w-full overflow-x-auto pb-3 scroll-smooth snap-x snap-mandatory"
       >
-        <div className="flex gap-4 min-w-[1300px]">
+        <div className="flex gap-3 sm:gap-4 min-w-[1250px]">
           {STAGES_ORDER.map((stageObj, idx) => {
             const stageCandidates = candidates.filter(
               (c) => c.stage === stageObj.key
@@ -253,7 +253,7 @@ export function PipelineBoard({
                 onDragOver={(e) => handleDragOver(e, stageObj.key)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, stageObj.key)}
-                className={`flex-1 min-w-[240px] rounded-2xl flex flex-col max-h-[75vh] transition-all duration-200 border ${
+                className={`flex-1 min-w-[240px] rounded-2xl flex flex-col max-h-[calc(100vh-210px)] transition-all duration-200 border snap-start ${
                   isColumnOver
                     ? "bg-zinc-200/70 dark:bg-zinc-800/80 border-zinc-900 dark:border-zinc-100 ring-2 ring-zinc-900/20 dark:ring-white/20 shadow-md scale-[1.01]"
                     : "bg-zinc-50/70 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800"

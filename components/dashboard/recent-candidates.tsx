@@ -17,8 +17,8 @@ export function RecentCandidates({
   onViewAll,
 }: RecentCandidatesProps) {
   return (
-    <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 shadow-xs">
-      <div className="flex items-center justify-between mb-4">
+    <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 sm:p-5 shadow-xs">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
             Recently Added Candidates
@@ -41,11 +41,11 @@ export function RecentCandidates({
             No candidates recorded yet.
           </p>
         ) : (
-          candidates.map((c) => (
+          candidates.slice(0, 4).map((c) => (
             <div
               key={c.id}
               onClick={() => onView(c)}
-              className="py-3 flex items-center justify-between gap-3 hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 px-2 rounded-xl transition-colors cursor-pointer group"
+              className="py-2.5 flex items-center justify-between gap-3 hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 px-2 rounded-xl transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <div className="h-9 w-9 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center font-semibold text-xs shrink-0 border border-zinc-200 dark:border-zinc-700">

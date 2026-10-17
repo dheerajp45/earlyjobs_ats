@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Sidebar, NavTab } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { MetricCards } from "@/components/dashboard/metric-cards";
 import { StageChart } from "@/components/dashboard/stage-chart";
 import { RecentCandidates } from "@/components/dashboard/recent-candidates";
@@ -290,9 +291,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex">
+    <div className="h-screen w-full bg-zinc-50 dark:bg-zinc-950 flex overflow-hidden">
       {/* Sidebar Navigation */}
-      <div className="hidden sm:block">
+      <div className="hidden sm:block shrink-0 h-full">
         <Sidebar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -304,7 +305,7 @@ export default function App() {
       </div>
 
       {/* Main Workspace */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
         <Header
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -317,7 +318,7 @@ export default function App() {
 
         {/* Global Toast Notification */}
         {notification && (
-          <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
+          <div className="fixed bottom-20 sm:bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
             <div
               className={`flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-sm font-medium ${
                 notification.type === "success"
@@ -342,7 +343,7 @@ export default function App() {
         )}
 
         {/* View Tabs Content */}
-        <main className="p-6 md:p-8 space-y-6 flex-1 max-w-7xl mx-auto w-full">
+        <main className="p-4 sm:p-5 lg:p-6 space-y-4 sm:space-y-6 flex-1 overflow-y-auto max-w-7xl mx-auto w-full pb-20 sm:pb-6">
           {activeTab === "dashboard" && (
             <div className="space-y-6 animate-in fade-in duration-200">
               {/* Metric Cards */}
@@ -481,6 +482,13 @@ export default function App() {
           setCandidateToDelete(null);
         }}
         onConfirm={handleDeleteCandidate}
+      />
+
+      {/* Mobile Bottom Navigation */}
+      <MobileNav
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        candidateCount={candidates.length}
       />
     </div>
   );

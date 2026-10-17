@@ -45,7 +45,7 @@ export function Sidebar({
   ];
 
   return (
-    <aside className="w-64 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex flex-col justify-between shrink-0 h-screen sticky top-0">
+    <aside className="w-64 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex flex-col justify-between shrink-0 h-full">
       <div>
         {/* Brand / Logo */}
         <div className="p-6 border-b border-zinc-100 dark:border-zinc-800/80">

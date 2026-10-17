@@ -35,61 +35,25 @@ export function Header({
   const { title, subtitle } = titles[activeTab];
 
   return (
-    <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-30 px-6 py-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+    <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md shrink-0 z-30 px-4 py-3 sm:px-6 sm:py-3.5">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="text-base sm:text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100 truncate">
             {title}
           </h2>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 truncate hidden sm:block">
             {subtitle}
           </p>
         </div>
 
-        {/* Mobile Navigation & Actions */}
-        <div className="flex items-center gap-2">
-          {/* Mobile Tab Switcher */}
-          <div className="flex sm:hidden rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200 dark:border-zinc-800">
-            <button
-              onClick={() => onTabChange("dashboard")}
-              className={`p-1.5 rounded-lg text-xs cursor-pointer ${
-                activeTab === "dashboard"
-                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
-                  : "text-zinc-500"
-              }`}
-              title="Dashboard"
-            >
-              <LayoutDashboard className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => onTabChange("candidates")}
-              className={`p-1.5 rounded-lg text-xs cursor-pointer ${
-                activeTab === "candidates"
-                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
-                  : "text-zinc-500"
-              }`}
-              title="Candidates"
-            >
-              <Users className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => onTabChange("pipeline")}
-              className={`p-1.5 rounded-lg text-xs cursor-pointer ${
-                activeTab === "pipeline"
-                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
-                  : "text-zinc-500"
-              }`}
-              title="Pipeline"
-            >
-              <GitPullRequest className="h-4 w-4" />
-            </button>
-          </div>
-
+        {/* Mobile & Desktop Actions */}
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={onNewCandidate}
-            className="sm:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-black text-white dark:bg-white dark:text-zinc-950 text-xs font-semibold cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-zinc-900 hover:bg-black text-white dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer"
           >
-            <Plus className="h-4 w-4" /> Add
+            <Plus className="h-4 w-4" />
+            <span>Add Candidate</span>
           </button>
         </div>
       </div>

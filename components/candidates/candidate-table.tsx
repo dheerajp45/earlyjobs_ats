@@ -175,22 +175,22 @@ export function CandidateTable({
                     />
                   </th>
                 )}
-                <th scope="col" className="px-6 py-3.5 font-semibold">
+                <th scope="col" className="px-4 sm:px-5 py-3 font-semibold">
                   Candidate Name
                 </th>
-                <th scope="col" className="px-6 py-3.5 font-semibold">
+                <th scope="col" className="px-4 sm:px-5 py-3 font-semibold">
                   Position & Experience
                 </th>
-                <th scope="col" className="px-6 py-3.5 font-semibold">
+                <th scope="col" className="px-4 sm:px-5 py-3 font-semibold">
                   Scorecard
                 </th>
-                <th scope="col" className="px-6 py-3.5 font-semibold">
+                <th scope="col" className="px-4 sm:px-5 py-3 font-semibold">
                   Hiring Stage
                 </th>
-                <th scope="col" className="px-6 py-3.5 font-semibold">
+                <th scope="col" className="px-4 sm:px-5 py-3 font-semibold">
                   Applied Date
                 </th>
-                <th scope="col" className="px-6 py-3.5 font-semibold text-right">
+                <th scope="col" className="px-4 sm:px-5 py-3 font-semibold text-right">
                   Actions
                 </th>
               </tr>
@@ -209,7 +209,7 @@ export function CandidateTable({
                   >
                     {/* Checkbox */}
                     {onBulkStageChange && (
-                      <td className="px-4 py-4 text-center">
+                      <td className="px-4 py-3 text-center">
                         <input
                           type="checkbox"
                           checked={isSelected}
@@ -220,7 +220,7 @@ export function CandidateTable({
                     )}
 
                     {/* Candidate Name & Email */}
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-5 py-3">
                       <div className="flex flex-col">
                         <button
                           onClick={() => onView(c)}
@@ -235,7 +235,7 @@ export function CandidateTable({
                     </td>
 
                     {/* Position & Experience */}
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-5 py-3">
                       <div className="flex flex-col">
                         <span className="font-medium text-zinc-800 dark:text-zinc-200">
                           {c.position}
@@ -249,7 +249,7 @@ export function CandidateTable({
                     </td>
 
                     {/* Scorecard / Star Rating */}
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-5 py-3">
                       {c.rating ? (
                         <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 text-amber-700 dark:text-amber-300 text-xs font-semibold">
                           <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
@@ -261,7 +261,7 @@ export function CandidateTable({
                     </td>
 
                     {/* Stage with Direct Selector */}
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-5 py-3">
                       <div className="flex items-center gap-2">
                         <StageBadge stage={c.stage} size="sm" />
                         <select
@@ -269,7 +269,7 @@ export function CandidateTable({
                           onChange={(e) =>
                             onStageChange(c.id, e.target.value as CandidateStage)
                           }
-                          className="opacity-0 group-hover:opacity-100 text-xs px-2 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-opacity focus:opacity-100 cursor-pointer"
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-xs px-2 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-opacity focus:opacity-100 cursor-pointer"
                         >
                           {STAGES.map((s) => (
                             <option key={s.value} value={s.value}>
@@ -281,7 +281,7 @@ export function CandidateTable({
                     </td>
 
                     {/* Applied Date */}
-                    <td className="px-6 py-4 whitespace-nowrap text-xs text-zinc-500 dark:text-zinc-400">
+                    <td className="px-4 sm:px-5 py-3 whitespace-nowrap text-xs text-zinc-500 dark:text-zinc-400">
                       <span className="flex items-center gap-1.5">
                         <Calendar className="h-3.5 w-3.5" />
                         {new Date(c.createdAt).toLocaleDateString()}
