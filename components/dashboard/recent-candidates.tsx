@@ -29,7 +29,7 @@ export function RecentCandidates({
         </div>
         <button
           onClick={onViewAll}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:underline transition-colors cursor-pointer"
         >
           View All <ArrowRight className="h-3.5 w-3.5" />
         </button>
@@ -48,11 +48,11 @@ export function RecentCandidates({
               className="py-3 flex items-center justify-between gap-3 hover:bg-zinc-50/70 dark:hover:bg-zinc-800/30 px-2 rounded-xl transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="h-9 w-9 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-semibold text-xs shrink-0">
+                <div className="h-9 w-9 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 flex items-center justify-center font-semibold text-xs shrink-0 border border-zinc-200 dark:border-zinc-700">
                   {c.name.charAt(0)}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate group-hover:text-indigo-600 transition-colors">
+                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate group-hover:underline transition-colors">
                     {c.name}
                   </p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">

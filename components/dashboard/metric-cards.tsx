@@ -22,9 +22,9 @@ export function MetricCards({
       value: totalCandidates,
       description: "All applicants in database",
       icon: Users,
-      color: "text-indigo-600 dark:text-indigo-400",
-      bg: "bg-indigo-50 dark:bg-indigo-950/40",
-      border: "border-indigo-100 dark:border-indigo-900/60",
+      color: "text-zinc-900 dark:text-zinc-100",
+      bg: "bg-zinc-100 dark:bg-zinc-800",
+      border: "border-zinc-200 dark:border-zinc-700",
     },
     {
       label: "Active Pipeline",
@@ -33,7 +33,7 @@ export function MetricCards({
       icon: TrendingUp,
       color: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-50 dark:bg-amber-950/40",
-      border: "border-amber-100 dark:border-amber-900/60",
+      border: "border-amber-200/60 dark:border-amber-900/60",
     },
     {
       label: "Hired Applicants",
@@ -42,16 +42,16 @@ export function MetricCards({
       icon: UserCheck,
       color: "text-emerald-600 dark:text-emerald-400",
       bg: "bg-emerald-50 dark:bg-emerald-950/40",
-      border: "border-emerald-100 dark:border-emerald-900/60",
+      border: "border-emerald-200/60 dark:border-emerald-900/60",
     },
     {
       label: "Open Job Positions",
       value: distinctPositionsCount,
       description: "Unique roles with applications",
       icon: Briefcase,
-      color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-purple-50 dark:bg-purple-950/40",
-      border: "border-purple-100 dark:border-purple-900/60",
+      color: "text-blue-600 dark:text-blue-400",
+      bg: "bg-blue-50 dark:bg-blue-950/40",
+      border: "border-blue-200/60 dark:border-blue-900/60",
     },
   ];
 

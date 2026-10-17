@@ -52,9 +52,9 @@ export function Header({
           <div className="flex sm:hidden rounded-xl bg-zinc-100 dark:bg-zinc-900 p-1 border border-zinc-200 dark:border-zinc-800">
             <button
               onClick={() => onTabChange("dashboard")}
-              className={`p-1.5 rounded-lg text-xs ${
+              className={`p-1.5 rounded-lg text-xs cursor-pointer ${
                 activeTab === "dashboard"
-                  ? "bg-white dark:bg-zinc-800 text-indigo-600 font-semibold shadow-xs"
+                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
                   : "text-zinc-500"
               }`}
               title="Dashboard"
@@ -63,9 +63,9 @@ export function Header({
             </button>
             <button
               onClick={() => onTabChange("candidates")}
-              className={`p-1.5 rounded-lg text-xs ${
+              className={`p-1.5 rounded-lg text-xs cursor-pointer ${
                 activeTab === "candidates"
-                  ? "bg-white dark:bg-zinc-800 text-indigo-600 font-semibold shadow-xs"
+                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
                   : "text-zinc-500"
               }`}
               title="Candidates"
@@ -74,9 +74,9 @@ export function Header({
             </button>
             <button
               onClick={() => onTabChange("pipeline")}
-              className={`p-1.5 rounded-lg text-xs ${
+              className={`p-1.5 rounded-lg text-xs cursor-pointer ${
                 activeTab === "pipeline"
-                  ? "bg-white dark:bg-zinc-800 text-indigo-600 font-semibold shadow-xs"
+                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
                   : "text-zinc-500"
               }`}
               title="Pipeline"
@@ -87,7 +87,7 @@ export function Header({
 
           <button
             onClick={onNewCandidate}
-            className="sm:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-semibold"
+            className="sm:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-black text-white dark:bg-white dark:text-zinc-950 text-xs font-semibold cursor-pointer"
           >
             <Plus className="h-4 w-4" /> Add
           </button>

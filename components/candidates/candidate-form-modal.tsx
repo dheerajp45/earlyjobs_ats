@@ -142,7 +142,7 @@ export function CandidateFormModal({
                 setFormData({ ...formData, name: e.target.value })
               }
               placeholder="e.g. Alex Rivera"
-              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
             />
             {fieldErrors.name && (
               <p className="text-xs text-rose-500">{fieldErrors.name[0]}</p>
@@ -162,7 +162,7 @@ export function CandidateFormModal({
                 setFormData({ ...formData, email: e.target.value })
               }
               placeholder="alex.rivera@example.com"
-              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
             />
             {fieldErrors.email && (
               <p className="text-xs text-rose-500">{fieldErrors.email[0]}</p>
@@ -182,7 +182,7 @@ export function CandidateFormModal({
                 setFormData({ ...formData, position: e.target.value })
               }
               placeholder="e.g. Senior Full Stack Engineer"
-              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
             />
             {fieldErrors.position && (
               <p className="text-xs text-rose-500">{fieldErrors.position[0]}</p>
@@ -202,7 +202,7 @@ export function CandidateFormModal({
                   stage: e.target.value as CandidateStage,
                 })
               }
-              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600 cursor-pointer"
             >
               {STAGES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -224,7 +224,7 @@ export function CandidateFormModal({
                 setFormData({ ...formData, phone: e.target.value })
               }
               placeholder="+1 (555) 234-5678"
-              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
             />
             {fieldErrors.phone && (
               <p className="text-xs text-rose-500">{fieldErrors.phone[0]}</p>
@@ -247,7 +247,7 @@ export function CandidateFormModal({
                   experience: parseInt(e.target.value) || 0,
                 })
               }
-              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
             />
             {fieldErrors.experience && (
               <p className="text-xs text-rose-500">
@@ -269,7 +269,7 @@ export function CandidateFormModal({
               setFormData({ ...formData, resumeUrl: e.target.value })
             }
             placeholder="https://example.com/resume.pdf"
-            className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+            className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
           />
           {fieldErrors.resumeUrl && (
             <p className="text-xs text-rose-500">{fieldErrors.resumeUrl[0]}</p>
@@ -286,7 +286,7 @@ export function CandidateFormModal({
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, rating: null })}
-                className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline"
+                className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline cursor-pointer"
               >
                 Clear rating
               </button>
@@ -302,7 +302,7 @@ export function CandidateFormModal({
                   onClick={() => setFormData({ ...formData, rating: star })}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(null)}
-                  className="p-1 rounded-md transition-transform hover:scale-115 focus:outline-none"
+                  className="p-1 rounded-md transition-transform hover:scale-115 focus:outline-none cursor-pointer"
                   title={`Rate ${star} Star${star > 1 ? "s" : ""}`}
                 >
                   <Star
@@ -333,7 +333,7 @@ export function CandidateFormModal({
               setFormData({ ...formData, notes: e.target.value })
             }
             placeholder="Screening interview feedback, salary expectation, technical notes..."
-            className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none"
+            className="w-full px-3.5 py-2 rounded-xl text-sm border border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600 resize-none"
           />
         </div>
 
@@ -343,14 +343,14 @@ export function CandidateFormModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium rounded-xl border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 transition-colors"
+            className="px-4 py-2 text-sm font-medium rounded-xl border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-medium rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20 transition-all disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-medium rounded-xl bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 font-semibold shadow-xs transition-all disabled:opacity-60 cursor-pointer"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {candidateToEdit ? "Save Changes" : "Create Candidate"}

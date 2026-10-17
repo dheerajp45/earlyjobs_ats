@@ -14,7 +14,6 @@ import {
   Star,
   CheckSquare,
   XCircle,
-  Layers,
 } from "lucide-react";
 import { CandidateDetailData } from "./candidate-detail-modal";
 
@@ -80,7 +79,7 @@ export function CandidateTable({
   if (loading) {
     return (
       <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-12 text-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-zinc-900 dark:border-white border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
         <p className="mt-3 text-sm text-zinc-500">Loading candidates from database...</p>
       </div>
     );
@@ -106,16 +105,16 @@ export function CandidateTable({
     <div className="w-full space-y-3">
       {/* Bulk Action Toolbar */}
       {selectedIds.length > 0 && onBulkStageChange && (
-        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-indigo-50/90 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-2xl shadow-xs transition-all animate-in fade-in slide-in-from-top-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 border border-zinc-800 dark:border-zinc-200 rounded-2xl shadow-lg transition-all animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-2">
-            <CheckSquare className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-            <span className="text-xs font-semibold text-indigo-950 dark:text-indigo-200">
+            <CheckSquare className="h-4 w-4 text-zinc-300 dark:text-zinc-700" />
+            <span className="text-xs font-semibold">
               {selectedIds.length} candidate{selectedIds.length === 1 ? "" : "s"} selected
             </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+            <span className="text-xs text-zinc-400 dark:text-zinc-600 font-medium">
               Bulk Stage:
             </span>
             <select
@@ -127,7 +126,7 @@ export function CandidateTable({
                 }
               }}
               defaultValue=""
-              className="text-xs font-medium px-3 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+              className="text-xs font-medium px-3 py-1.5 rounded-xl border border-zinc-700 dark:border-zinc-300 bg-zinc-800 dark:bg-white text-zinc-100 dark:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-500 cursor-pointer"
             >
               <option value="" disabled>
                 Move all to stage...
@@ -143,7 +142,7 @@ export function CandidateTable({
               type="button"
               disabled={bulkLoading}
               onClick={() => handleBulkStage("REJECTED")}
-              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-rose-700 dark:text-rose-300 bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/60 dark:hover:bg-rose-900/60 rounded-xl transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors cursor-pointer"
             >
               <XCircle className="h-3.5 w-3.5" /> Reject Selected
             </button>
@@ -151,7 +150,7 @@ export function CandidateTable({
             <button
               type="button"
               onClick={() => setSelectedIds([])}
-              className="px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+              className="px-2.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white dark:text-zinc-600 dark:hover:text-zinc-950 transition-colors cursor-pointer"
             >
               Deselect
             </button>
@@ -171,7 +170,7 @@ export function CandidateTable({
                       type="checkbox"
                       checked={isAllSelected}
                       onChange={toggleSelectAll}
-                      className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                      className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
                       title="Select all candidates"
                     />
                   </th>
@@ -204,7 +203,7 @@ export function CandidateTable({
                     key={c.id}
                     className={`transition-colors group ${
                       isSelected
-                        ? "bg-indigo-50/40 dark:bg-indigo-950/20"
+                        ? "bg-zinc-100/70 dark:bg-zinc-800/50"
                         : "hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30"
                     }`}
                   >
@@ -215,7 +214,7 @@ export function CandidateTable({
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => toggleSelect(c.id)}
-                          className="rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                          className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
                         />
                       </td>
                     )}
@@ -225,7 +224,7 @@ export function CandidateTable({
                       <div className="flex flex-col">
                         <button
                           onClick={() => onView(c)}
-                          className="text-left font-semibold text-zinc-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                          className="text-left font-semibold text-zinc-900 dark:text-zinc-100 hover:underline transition-all cursor-pointer"
                         >
                           {c.name}
                         </button>
@@ -297,7 +296,7 @@ export function CandidateTable({
                             href={c.resumeUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 text-zinc-400 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                            className="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                             title="Open Resume"
                           >
                             <ExternalLink className="h-4 w-4" />
@@ -305,7 +304,7 @@ export function CandidateTable({
                         )}
                         <button
                           onClick={() => onView(c)}
-                          className="p-1.5 text-zinc-400 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
+                          className="p-1.5 text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
                           title="View Details"
                         >
                           <Eye className="h-4 w-4" />

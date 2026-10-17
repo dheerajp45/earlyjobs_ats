@@ -152,7 +152,7 @@ export function PipelineBoard({
   if (loading) {
     return (
       <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-12 text-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent" />
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-zinc-900 dark:border-white border-r-transparent" />
         <p className="mt-3 text-sm text-zinc-500">Loading pipeline stages...</p>
       </div>
     );
@@ -165,7 +165,7 @@ export function PipelineBoard({
       {/* Top Action Bar with Instructions and Scroll Arrows */}
       <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 px-1">
         <span className="flex items-center gap-1.5 font-medium">
-          <GripVertical className="h-3.5 w-3.5 text-indigo-500" />
+          <GripVertical className="h-3.5 w-3.5 text-zinc-500" />
           <span>
             <strong>Drag cards</strong> between columns. Drag near edges or use scroll buttons to view off-screen stages.
           </span>
@@ -194,11 +194,11 @@ export function PipelineBoard({
 
       {/* Quick-Drop Target Strip (Visible when card is in the air) */}
       {draggingId && (
-        <div className="p-3 bg-indigo-50/90 dark:bg-indigo-950/60 border-2 border-indigo-300 dark:border-indigo-700 rounded-2xl shadow-lg flex flex-wrap items-center justify-between gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
-          <div className="flex items-center gap-2 text-xs font-semibold text-indigo-950 dark:text-indigo-200">
-            <span className="inline-block h-2 w-2 rounded-full bg-indigo-600 animate-ping" />
+        <div className="p-3 bg-zinc-900 dark:bg-zinc-800 text-white rounded-2xl shadow-xl border border-zinc-800 dark:border-zinc-700 flex flex-wrap items-center justify-between gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-100">
+            <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
             <span>
-              Moving <strong>{draggingCandidate?.name}</strong>: Drop onto any target below:
+              Moving <strong className="text-white underline">{draggingCandidate?.name}</strong>: Drop onto any target below:
             </span>
           </div>
 
@@ -219,10 +219,10 @@ export function PipelineBoard({
                   onDrop={(e) => handleDrop(e, stageObj.key)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center gap-1 ${
                     isTargetOver
-                      ? "bg-indigo-600 text-white border-indigo-600 scale-110 shadow-md ring-2 ring-indigo-300"
+                      ? "bg-white text-zinc-950 border-white scale-110 shadow-lg ring-2 ring-zinc-400"
                       : isCurrentStage
-                      ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 border-dashed border-zinc-300 dark:border-zinc-700 opacity-60"
-                      : "bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border-zinc-200 dark:border-zinc-700 hover:border-indigo-500 hover:shadow-xs"
+                      ? "bg-zinc-800 text-zinc-500 border-dashed border-zinc-700 opacity-60"
+                      : "bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 border-zinc-700 hover:text-white hover:shadow-xs"
                   }`}
                 >
                   <span>{stageObj.label}</span>
@@ -255,7 +255,7 @@ export function PipelineBoard({
                 onDrop={(e) => handleDrop(e, stageObj.key)}
                 className={`flex-1 min-w-[240px] rounded-2xl flex flex-col max-h-[75vh] transition-all duration-200 border ${
                   isColumnOver
-                    ? "bg-indigo-50/80 dark:bg-indigo-950/40 border-indigo-400 dark:border-indigo-600 ring-2 ring-indigo-400/50 shadow-md scale-[1.01]"
+                    ? "bg-zinc-200/70 dark:bg-zinc-800/80 border-zinc-900 dark:border-zinc-100 ring-2 ring-zinc-900/20 dark:ring-white/20 shadow-md scale-[1.01]"
                     : "bg-zinc-50/70 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800"
                 }`}
               >
@@ -273,8 +273,8 @@ export function PipelineBoard({
 
                 {/* Drop Zone Highlight Hint */}
                 {isColumnOver && (
-                  <div className="mx-2.5 mt-2.5 p-2 rounded-xl border border-dashed border-indigo-400 dark:border-indigo-500 bg-indigo-100/50 dark:bg-indigo-900/40 text-center animate-pulse">
-                    <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 flex items-center justify-center gap-1">
+                  <div className="mx-2.5 mt-2.5 p-2 rounded-xl border border-dashed border-zinc-900 dark:border-zinc-100 bg-zinc-100 dark:bg-zinc-800 text-center animate-pulse">
+                    <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center justify-center gap-1">
                       <ArrowDown className="h-3 w-3" /> Drop here to move to {stageObj.label}
                     </p>
                   </div>
@@ -298,7 +298,7 @@ export function PipelineBoard({
                           onDragEnd={handleDragEnd}
                           className={`bg-white dark:bg-zinc-900 rounded-xl p-3 border transition-all duration-150 flex flex-col justify-between cursor-grab active:cursor-grabbing select-none ${
                             isDragging
-                              ? "opacity-30 border-indigo-400 ring-2 ring-indigo-400 shadow-lg scale-95"
+                              ? "opacity-30 border-zinc-900 dark:border-zinc-100 ring-2 ring-zinc-900 dark:ring-zinc-100 shadow-lg scale-95"
                               : "border-zinc-200 dark:border-zinc-800 shadow-xs hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700"
                           }`}
                         >
@@ -309,7 +309,7 @@ export function PipelineBoard({
                                 <GripVertical className="h-3.5 w-3.5 text-zinc-300 dark:text-zinc-600 shrink-0" />
                                 <h4
                                   onClick={() => onView(candidate)}
-                                  className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer transition-colors truncate"
+                                  className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 hover:underline cursor-pointer transition-colors truncate"
                                 >
                                   {candidate.name}
                                 </h4>
@@ -356,7 +356,7 @@ export function PipelineBoard({
                                   e.target.value as CandidateStage
                                 )
                               }
-                              className="w-full text-[11px] font-medium py-1 px-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
+                              className="w-full text-[11px] font-medium py-1 px-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600 cursor-pointer"
                             >
                               {STAGES_ORDER.map((s) => (
                                 <option key={s.key} value={s.key}>
@@ -424,7 +424,7 @@ export function PipelineBoard({
                                         STAGES_ORDER[idx + 1].key
                                       )
                                     }
-                                    className="inline-flex items-center gap-0.5 text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 p-1 rounded-md hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition-colors cursor-pointer"
+                                    className="inline-flex items-center gap-0.5 text-[11px] font-medium text-zinc-900 dark:text-zinc-100 hover:text-black dark:hover:text-white p-1 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                                     title={`Advance to ${STAGES_ORDER[idx + 1].label}`}
                                   >
                                     <span>Advance</span>

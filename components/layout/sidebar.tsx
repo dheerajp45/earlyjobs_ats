@@ -50,7 +50,7 @@ export function Sidebar({
         {/* Brand / Logo */}
         <div className="p-6 border-b border-zinc-100 dark:border-zinc-800/80">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
+            <div className="h-10 w-10 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 flex items-center justify-center shadow-xs">
               <Briefcase className="h-5 w-5" />
             </div>
             <div>
@@ -68,7 +68,7 @@ export function Sidebar({
         <div className="p-4">
           <button
             onClick={onNewCandidate}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold shadow-sm shadow-indigo-500/25 transition-all hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-sm font-semibold shadow-xs transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
           >
             <PlusCircle className="h-4 w-4" />
             <span>New Candidate</span>
@@ -85,9 +85,9 @@ export function Sidebar({
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
                 className={cn(
-                  "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors text-left",
+                  "w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors text-left cursor-pointer",
                   isActive
-                    ? "bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-semibold"
+                    ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 font-semibold shadow-xs"
                     : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-100"
                 )}
               >
@@ -95,7 +95,7 @@ export function Sidebar({
                   className={cn(
                     "h-4 w-4 shrink-0",
                     isActive
-                      ? "text-indigo-600 dark:text-indigo-400"
+                      ? "text-white dark:text-zinc-950"
                       : "text-zinc-400"
                   )}
                 />

@@ -14,24 +14,24 @@ const stageConfig: Record<
 > = {
   APPLIED: {
     label: "Applied",
-    bg: "bg-blue-50 dark:bg-blue-950/40",
-    text: "text-blue-700 dark:text-blue-300",
-    border: "border-blue-200 dark:border-blue-800",
-    dot: "bg-blue-500",
+    bg: "bg-zinc-100 dark:bg-zinc-800",
+    text: "text-zinc-800 dark:text-zinc-200",
+    border: "border-zinc-200 dark:border-zinc-700",
+    dot: "bg-zinc-500",
   },
   SCREENING: {
     label: "Screening",
-    bg: "bg-purple-50 dark:bg-purple-950/40",
-    text: "text-purple-700 dark:text-purple-300",
-    border: "border-purple-200 dark:border-purple-800",
-    dot: "bg-purple-500",
-  },
-  INTERVIEW: {
-    label: "Interview",
     bg: "bg-amber-50 dark:bg-amber-950/40",
     text: "text-amber-700 dark:text-amber-300",
     border: "border-amber-200 dark:border-amber-800",
     dot: "bg-amber-500",
+  },
+  INTERVIEW: {
+    label: "Interview",
+    bg: "bg-blue-50 dark:bg-blue-950/40",
+    text: "text-blue-700 dark:text-blue-300",
+    border: "border-blue-200 dark:border-blue-800",
+    dot: "bg-blue-500",
   },
   OFFER: {
     label: "Offer",

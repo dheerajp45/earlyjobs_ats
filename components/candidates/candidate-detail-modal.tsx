@@ -84,7 +84,7 @@ export function CandidateDetailModal({
               onChange={(e) =>
                 onStageChange(candidate.id, e.target.value as CandidateStage)
               }
-              className="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="text-xs font-medium px-2.5 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
             >
               {STAGES.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -103,7 +103,7 @@ export function CandidateDetailModal({
               <p className="text-xs text-zinc-500 dark:text-zinc-400">Email</p>
               <a
                 href={`mailto:${candidate.email}`}
-                className="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline break-all"
+                className="text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:underline break-all"
               >
                 {candidate.email}
               </a>
@@ -146,7 +146,7 @@ export function CandidateDetailModal({
                   href={candidate.resumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
+                  className="inline-flex items-center gap-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100 hover:underline"
                 >
                   View Document <ExternalLink className="h-3 w-3" />
                 </a>
@@ -229,7 +229,7 @@ export function CandidateDetailModal({
             <button
               type="button"
               onClick={() => onEdit(candidate)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-xl bg-zinc-900 hover:bg-black dark:bg-white dark:hover:bg-zinc-100 text-white dark:text-zinc-950 shadow-xs transition-colors"
             >
               <Edit2 className="h-4 w-4" /> Edit Profile
             </button>

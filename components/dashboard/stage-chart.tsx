@@ -23,9 +23,9 @@ interface StageChartProps {
 }
 
 const STAGE_COLORS: Record<string, string> = {
-  APPLIED: "#3b82f6", // Blue
-  SCREENING: "#a855f7", // Purple
-  INTERVIEW: "#f59e0b", // Amber
+  APPLIED: "#71717a", // Slate / Zinc
+  SCREENING: "#f59e0b", // Amber
+  INTERVIEW: "#3b82f6", // Blue
   OFFER: "#14b8a6", // Teal
   HIRED: "#10b981", // Emerald
   REJECTED: "#f43f5e", // Rose
@@ -104,7 +104,7 @@ export function StageChart({ data }: StageChartProps) {
               {data.map((entry) => (
                 <Cell
                   key={`cell-${entry.stage}`}
-                  fill={STAGE_COLORS[entry.stage] || "#6366f1"}
+                  fill={STAGE_COLORS[entry.stage] || "#18181b"}
                 />
               ))}
             </Bar>
