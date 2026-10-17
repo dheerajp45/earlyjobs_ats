@@ -23,13 +23,34 @@ interface StageChartProps {
   data: StageDistributionItem[];
 }
 
-const STAGE_COLORS: Record<string, string> = {
-  APPLIED: "#0ea5e9", // Sky Blue
-  SCREENING: "#f59e0b", // Amber
-  INTERVIEW: "#3b82f6", // Blue
-  OFFER: "#14b8a6", // Teal
-  HIRED: "#10b981", // Emerald
-  REJECTED: "#f43f5e", // Rose
+const STAGE_CONFIG: Record<
+  string,
+  { label: string; color: string }
+> = {
+  APPLIED: {
+    label: "Applied",
+    color: "#475569", // Slate 600 - sleek steel
+  },
+  SCREENING: {
+    label: "Screening",
+    color: "#f59e0b", // Amber 500 - warm golden
+  },
+  INTERVIEW: {
+    label: "Interview",
+    color: "#2563eb", // Royal Sapphire Blue
+  },
+  OFFER: {
+    label: "Offer",
+    color: "#0d9488", // Deep Emerald Teal
+  },
+  HIRED: {
+    label: "Hired",
+    color: "#16a34a", // Forest Green
+  },
+  REJECTED: {
+    label: "Rejected",
+    color: "#e11d48", // Rose Red
+  },
 };
 
 export function StageChart({ data }: StageChartProps) {
@@ -41,20 +62,20 @@ export function StageChart({ data }: StageChartProps) {
 
   if (!isMounted) {
     return (
-      <div className="h-72 w-full flex items-center justify-center bg-zinc-50/50 dark:bg-zinc-800/30 rounded-xl">
+      <div className="h-72 w-full flex items-center justify-center bg-zinc-50/50 rounded-xl">
         <p className="text-xs text-zinc-400">Loading chart metrics...</p>
       </div>
     );
   }
 
   return (
-    <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4 sm:p-5 shadow-xs">
+    <div className="w-full bg-white rounded-2xl border border-zinc-200 p-4 sm:p-5 shadow-xs">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-base font-semibold text-zinc-900">
             Hiring Pipeline Distribution
           </h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+          <p className="text-xs text-zinc-500 mt-0.5">
             Real-time candidate count across all 6 recruitment stages
           </p>
         </div>
@@ -64,55 +85,66 @@ export function StageChart({ data }: StageChartProps) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ top: 10, right: 10, left: -25, bottom: 5 }}
+            margin={{ top: 12, right: 10, left: -25, bottom: 5 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#e5e7eb"
-              className="dark:stroke-zinc-800"
+              stroke="#f4f4f5"
             />
             <XAxis
               dataKey="label"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: "#71717a", fontSize: 11 }}
+              tick={{ fill: "#64748b", fontSize: 11, fontWeight: 500 }}
               interval={0}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
               allowDecimals={false}
-              tick={{ fill: "#71717a", fontSize: 11 }}
+              tick={{ fill: "#94a3b8", fontSize: 11 }}
             />
             <Tooltip
               cursor={false}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const item = payload[0].payload as StageDistributionItem;
+                  const config = STAGE_CONFIG[item.stage] || { color: "#475569" };
                   return (
-                    <div className="rounded-xl bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 px-3 py-2 text-xs shadow-lg border border-zinc-800">
-                      <p className="font-semibold">{item.label}</p>
-                      <p className="text-zinc-300 dark:text-zinc-600 mt-0.5">
-                        {item.count} {item.count === 1 ? "candidate" : "candidates"}
-                      </p>
+                    <div className="rounded-xl bg-zinc-900 text-white px-3.5 py-2 text-xs shadow-xl border border-zinc-800 flex items-center gap-2">
+                      <span
+                        className="h-2 w-2 rounded-full shrink-0"
+                        style={{ backgroundColor: config.color }}
+                      />
+                      <div>
+                        <p className="font-semibold">{item.label}</p>
+                        <p className="text-zinc-300 text-[11px] mt-0.5">
+                          {item.count} {item.count === 1 ? "candidate" : "candidates"}
+                        </p>
+                      </div>
                     </div>
                   );
                 }
                 return null;
               }}
             />
-            <Bar dataKey="count" radius={[6, 6, 0, 0]} minPointSize={4}>
+            <Bar
+              dataKey="count"
+              maxBarSize={42}
+              radius={[8, 8, 2, 2]}
+              minPointSize={6}
+            >
               <LabelList
                 dataKey="count"
                 position="top"
                 offset={6}
-                style={{ fontSize: 11, fontWeight: 700, fill: "#71717a" }}
+                style={{ fontSize: 11, fontWeight: 700, fill: "#475569" }}
               />
               {data.map((entry) => (
                 <Cell
                   key={`cell-${entry.stage}`}
-                  fill={STAGE_COLORS[entry.stage] || "#0ea5e9"}
+                  fill={STAGE_CONFIG[entry.stage]?.color || "#475569"}
                 />
               ))}
             </Bar>
