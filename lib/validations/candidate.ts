@@ -41,6 +41,14 @@ export const createCandidateSchema = z.object({
     .max(50, "Experience cannot exceed 50 years")
     .optional()
     .nullable(),
+  rating: z
+    .coerce
+    .number()
+    .int("Rating must be a whole number")
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating cannot exceed 5")
+    .optional()
+    .nullable(),
   resumeUrl: z
     .string()
     .trim()
@@ -63,6 +71,11 @@ export const updateStageSchema = z.object({
   stage: candidateStageEnum,
 });
 
+export const bulkUpdateStageSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1, "At least one candidate ID must be provided"),
+  stage: candidateStageEnum,
+});
+
 export const candidateQuerySchema = z.object({
   search: z.string().trim().optional(),
   stage: candidateStageEnum.optional(),
@@ -74,4 +87,5 @@ export const candidateQuerySchema = z.object({
 export type CreateCandidateInput = z.infer<typeof createCandidateSchema>;
 export type UpdateCandidateInput = z.infer<typeof updateCandidateSchema>;
 export type UpdateStageInput = z.infer<typeof updateStageSchema>;
+export type BulkUpdateStageInput = z.infer<typeof bulkUpdateStageSchema>;
 export type CandidateQueryInput = z.infer<typeof candidateQuerySchema>;

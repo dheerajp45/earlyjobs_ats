@@ -103,6 +103,7 @@ export async function createCandidate(data: CreateCandidateInput) {
       phone: data.phone,
       position: data.position,
       experience: data.experience,
+      rating: data.rating,
       resumeUrl: data.resumeUrl,
       stage: data.stage,
       notes: data.notes,
@@ -136,6 +137,15 @@ export async function updateCandidateStage(id: string, stage: CandidateStage) {
 
   return prisma.candidate.update({
     where: { id },
+    data: { stage },
+  });
+}
+
+export async function bulkUpdateCandidateStage(ids: string[], stage: CandidateStage) {
+  return prisma.candidate.updateMany({
+    where: {
+      id: { in: ids },
+    },
     data: { stage },
   });
 }

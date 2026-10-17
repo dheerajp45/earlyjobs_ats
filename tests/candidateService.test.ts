@@ -32,6 +32,7 @@ describe("Candidate Service Integration Tests", () => {
       phone: "+91 99999 88888",
       position: "QA Automation Engineer",
       experience: 4,
+      rating: 5,
       stage: "APPLIED",
       notes: "Created during vitest execution",
     });
@@ -40,6 +41,7 @@ describe("Candidate Service Integration Tests", () => {
     expect(candidate.id).toBeTruthy();
     expect(candidate.email).toBe(testCandidateEmail);
     expect(candidate.stage).toBe("APPLIED");
+    expect(candidate.rating).toBe(5);
 
     createdCandidateId = candidate.id;
   });
@@ -63,10 +65,26 @@ describe("Candidate Service Integration Tests", () => {
     expect(rejected.stage).toBe("REJECTED");
   });
 
+  it("updates candidates in bulk using bulkUpdateCandidateStage", async () => {
+    const { bulkUpdateCandidateStage } = await import(
+      "../lib/services/candidateService"
+    );
+    const result = await bulkUpdateCandidateStage(
+      [createdCandidateId],
+      "OFFER"
+    );
+    expect(result.count).toBe(1);
+
+    const verified = await prisma.candidate.findUnique({
+      where: { id: createdCandidateId },
+    });
+    expect(verified?.stage).toBe("OFFER");
+  });
+
   it("filters candidates by search and stage", async () => {
     const result = await getCandidates({
       search: "Vitest Candidate",
-      stage: "REJECTED",
+      stage: "OFFER",
       page: 1,
       limit: 10,
     });

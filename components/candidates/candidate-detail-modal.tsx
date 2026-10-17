@@ -13,6 +13,7 @@ import {
   Edit2,
   Trash2,
   Clock,
+  Star,
 } from "lucide-react";
 
 export interface CandidateDetailData {
@@ -22,6 +23,7 @@ export interface CandidateDetailData {
   phone?: string | null;
   position: string;
   experience?: number | null;
+  rating?: number | null;
   resumeUrl?: string | null;
   stage: CandidateStage;
   notes?: string | null;
@@ -152,6 +154,33 @@ export function CandidateDetailModal({
                 <p className="text-sm text-zinc-400">No link provided</p>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Interview Scorecard / Rating */}
+        <div className="p-4 rounded-xl bg-amber-50/70 dark:bg-amber-950/25 border border-amber-200/70 dark:border-amber-900/50 flex items-center justify-between">
+          <div>
+            <h4 className="text-xs font-semibold text-amber-900 dark:text-amber-300 uppercase tracking-wider">
+              Interview Scorecard Rating
+            </h4>
+            <p className="text-xs text-amber-700/80 dark:text-amber-400 mt-0.5">
+              Recruiter technical & culture evaluation
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`h-4.5 w-4.5 ${
+                  candidate.rating && star <= candidate.rating
+                    ? "text-amber-500 fill-amber-400"
+                    : "text-zinc-300 dark:text-zinc-700"
+                }`}
+              />
+            ))}
+            <span className="ml-2 font-bold text-xs px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300">
+              {candidate.rating ? `${candidate.rating} / 5 Stars` : "Unrated"}
+            </span>
           </div>
         </div>
 

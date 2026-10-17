@@ -13,15 +13,24 @@ Designed for recruitment workflows: manage candidate profiles, track application
   - Stage distribution visualization using **Recharts**.
   - Recent applicants feed with stage badges and quick details.
 - **👥 Candidate Management (Full CRUD)**:
-  - Add candidates with instant Zod field validation (Name, Email, Phone, Role, Experience, Resume URL, Notes).
+  - Add candidates with instant Zod field validation (Name, Email, Phone, Role, Experience, Rating, Resume URL, Notes).
   - Duplicate email conflict detection (HTTP 409).
   - Edit candidate details and delete with confirmation dialog.
   - Candidate detail modal with full recruiter notes and resume link.
-- **🔄 6-Stage Hiring Pipeline (Kanban Board)**:
+- **⭐ Interview Scorecards (1–5 Star Ratings)**:
+  - Interactive star rating picker for recruiter and interview technical evaluations.
+  - Visual star badges across Candidate Table, Pipeline Cards, and Candidate Profile modal.
+- **🔄 Interactive Drag-and-Drop Pipeline (Kanban Board)**:
   - 6 clearly organized columns: `Applied`, `Screening`, `Interview`, `Offer`, `Hired`, `Rejected`.
+  - **Native Drag-and-Drop**: Drag candidates between columns with animated drop indicators.
   - Quick **Advance** button to move candidates forward.
   - Dedicated direct **Reject** button to disqualify candidates immediately from any stage.
   - Inline stage dropdown selector for direct jumps.
+- **☑️ Bulk Stage Actions**:
+  - Select all or individual candidates with checkboxes.
+  - Floating bulk toolbar: batch-move selected candidates to any stage or batch-reject in a single atomic transaction.
+- **📥 Export to CSV**:
+  - Export filtered candidates and their full profiles (ratings, stages, contact info, notes) to a `.csv` spreadsheet for external analysis.
 - **🔍 Database Search & Filtering**:
   - Multi-field search across candidate name, email, and job position.
   - Filter by hiring stage and position.

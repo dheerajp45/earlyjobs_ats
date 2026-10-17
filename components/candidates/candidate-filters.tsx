@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, X, Filter } from "lucide-react";
+import { Search, X, Filter, Download } from "lucide-react";
 import { CandidateStage } from "@/lib/validations/candidate";
 
 interface CandidateFiltersProps {
@@ -13,6 +13,7 @@ interface CandidateFiltersProps {
   onStageChange: (value: string) => void;
   onPositionChange: (value: string) => void;
   onClearFilters: () => void;
+  onExportCSV?: () => void;
   totalResults: number;
 }
 
@@ -34,6 +35,7 @@ export function CandidateFilters({
   onStageChange,
   onPositionChange,
   onClearFilters,
+  onExportCSV,
   totalResults,
 }: CandidateFiltersProps) {
   const hasActiveFilters = Boolean(search || stage || position);
@@ -93,11 +95,23 @@ export function CandidateFilters({
           </select>
         </div>
 
+        {/* Export CSV Button */}
+        {onExportCSV && (
+          <button
+            type="button"
+            onClick={onExportCSV}
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-zinc-700 dark:text-zinc-200 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-xl transition-colors shrink-0 cursor-pointer"
+            title="Export filtered candidates to CSV spreadsheet"
+          >
+            <Download className="h-3.5 w-3.5 text-zinc-500" /> Export CSV
+          </button>
+        )}
+
         {/* Clear Filters Button */}
         {hasActiveFilters && (
           <button
             onClick={onClearFilters}
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-xl transition-colors shrink-0 cursor-pointer"
           >
             <X className="h-4 w-4" /> Reset Filters
           </button>

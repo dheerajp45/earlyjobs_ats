@@ -3,6 +3,7 @@ import {
   createCandidateSchema,
   updateCandidateSchema,
   updateStageSchema,
+  bulkUpdateStageSchema,
   candidateQuerySchema,
 } from "../lib/validations/candidate";
 
@@ -97,6 +98,31 @@ describe("Candidate Validations", () => {
       const result = createCandidateSchema.safeParse(data);
       expect(result.success).toBe(true);
     });
+    it("validates 1 to 5 star rating boundaries", () => {
+      const valid = createCandidateSchema.safeParse({
+        name: "Test User",
+        email: "test.star@example.com",
+        position: "Architect",
+        rating: 4,
+      });
+      expect(valid.success).toBe(true);
+
+      const tooLow = createCandidateSchema.safeParse({
+        name: "Test User",
+        email: "test.star@example.com",
+        position: "Architect",
+        rating: 0,
+      });
+      expect(tooLow.success).toBe(false);
+
+      const tooHigh = createCandidateSchema.safeParse({
+        name: "Test User",
+        email: "test.star@example.com",
+        position: "Architect",
+        rating: 6,
+      });
+      expect(tooHigh.success).toBe(false);
+    });
   });
 
   describe("updateStageSchema", () => {
@@ -110,6 +136,28 @@ describe("Candidate Validations", () => {
 
     it("rejects invalid stage values", () => {
       const result = updateStageSchema.safeParse({ stage: "ARCHIVED" });
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe("bulkUpdateStageSchema", () => {
+    it("accepts valid candidate IDs and a pipeline stage", () => {
+      const result = bulkUpdateStageSchema.safeParse({
+        ids: ["cand-1", "cand-2", "cand-3"],
+        stage: "HIRED",
+      });
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.ids).toHaveLength(3);
+        expect(result.data.stage).toBe("HIRED");
+      }
+    });
+
+    it("rejects an empty array of candidate IDs", () => {
+      const result = bulkUpdateStageSchema.safeParse({
+        ids: [],
+        stage: "REJECTED",
+      });
       expect(result.success).toBe(false);
     });
   });

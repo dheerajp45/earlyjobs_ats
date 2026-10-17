@@ -23,6 +23,7 @@ model Candidate {
   phone      String?
   position   String
   experience Int?
+  rating     Int?
   resumeUrl  String?
   stage      CandidateStage @default(APPLIED)
   notes      String?

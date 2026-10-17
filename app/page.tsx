@@ -203,6 +203,92 @@ export default function App() {
     loadDashboard();
   };
 
+  // Bulk Stage Update
+  const handleBulkStageChange = async (
+    ids: string[],
+    stage: CandidateStage
+  ) => {
+    try {
+      const res = await fetch("/api/candidates/bulk-stage", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids, stage }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to update candidates in bulk.");
+      }
+
+      const data = await res.json();
+      showNotification(
+        "success",
+        `Updated ${data.count} candidates to ${stage}`
+      );
+      loadCandidates();
+      loadDashboard();
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Failed to execute bulk action");
+    }
+  };
+
+  // Export filtered candidates to CSV
+  const handleExportCSV = () => {
+    if (candidates.length === 0) {
+      showNotification("error", "No candidates available to export.");
+      return;
+    }
+
+    const headers = [
+      "ID",
+      "Name",
+      "Email",
+      "Phone",
+      "Position",
+      "Experience (Years)",
+      "Scorecard Rating",
+      "Stage",
+      "Resume URL",
+      "Notes",
+      "Applied Date",
+    ];
+
+    const rows = candidates.map((c) => [
+      c.id,
+      `"${(c.name || "").replace(/"/g, '""')}"`,
+      `"${(c.email || "").replace(/"/g, '""')}"`,
+      `"${(c.phone || "").replace(/"/g, '""')}"`,
+      `"${(c.position || "").replace(/"/g, '""')}"`,
+      c.experience ?? "",
+      c.rating ? `${c.rating}/5` : "",
+      c.stage,
+      `"${(c.resumeUrl || "").replace(/"/g, '""')}"`,
+      `"${(c.notes || "").replace(/"/g, '""').replace(/\n/g, " ")}"`,
+      new Date(c.createdAt).toLocaleDateString(),
+    ]);
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `earlyjobs-candidates-${new Date().toISOString().slice(0, 10)}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showNotification(
+      "success",
+      `Exported ${candidates.length} candidate(s) to CSV spreadsheet`
+    );
+  };
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex">
       {/* Sidebar Navigation */}
@@ -302,6 +388,7 @@ export default function App() {
                   setStageFilter("");
                   setPositionFilter("");
                 }}
+                onExportCSV={handleExportCSV}
                 totalResults={candidates.length}
               />
 
@@ -322,6 +409,7 @@ export default function App() {
                   setIsDeleteOpen(true);
                 }}
                 onStageChange={handleStageChange}
+                onBulkStageChange={handleBulkStageChange}
               />
             </div>
           )}

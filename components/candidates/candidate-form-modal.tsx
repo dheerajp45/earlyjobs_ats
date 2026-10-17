@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { CandidateStage } from "@/lib/validations/candidate";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, Star } from "lucide-react";
 
 export interface CandidateFormData {
   id?: string;
@@ -12,6 +12,7 @@ export interface CandidateFormData {
   phone?: string | null;
   position: string;
   experience?: number | null;
+  rating?: number | null;
   resumeUrl?: string | null;
   stage: CandidateStage;
   notes?: string | null;
@@ -45,11 +46,13 @@ export function CandidateFormModal({
     phone: "",
     position: "",
     experience: 0,
+    rating: null,
     resumeUrl: "",
     stage: "APPLIED",
     notes: "",
   });
 
+  const [hoverRating, setHoverRating] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
@@ -63,6 +66,7 @@ export function CandidateFormModal({
         phone: candidateToEdit.phone || "",
         position: candidateToEdit.position || "",
         experience: candidateToEdit.experience ?? 0,
+        rating: candidateToEdit.rating ?? null,
         resumeUrl: candidateToEdit.resumeUrl || "",
         stage: candidateToEdit.stage || "APPLIED",
         notes: candidateToEdit.notes || "",
@@ -74,6 +78,7 @@ export function CandidateFormModal({
         phone: "",
         position: "",
         experience: 0,
+        rating: null,
         resumeUrl: "",
         stage: "APPLIED",
         notes: "",
@@ -269,6 +274,51 @@ export function CandidateFormModal({
           {fieldErrors.resumeUrl && (
             <p className="text-xs text-rose-500">{fieldErrors.resumeUrl[0]}</p>
           )}
+        </div>
+
+        {/* Scorecard / 1–5 Star Rating */}
+        <div className="space-y-1 p-3 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/40">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-semibold uppercase tracking-wider text-amber-900 dark:text-amber-300">
+              Interview Scorecard Rating
+            </label>
+            {formData.rating && (
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, rating: null })}
+                className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline"
+              >
+                Clear rating
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-1.5 pt-1">
+            {[1, 2, 3, 4, 5].map((star) => {
+              const active = hoverRating !== null ? star <= hoverRating : (formData.rating !== null && star <= (formData.rating || 0));
+              return (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, rating: star })}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(null)}
+                  className="p-1 rounded-md transition-transform hover:scale-115 focus:outline-none"
+                  title={`Rate ${star} Star${star > 1 ? "s" : ""}`}
+                >
+                  <Star
+                    className={`h-6 w-6 transition-colors ${
+                      active
+                        ? "text-amber-500 fill-amber-400"
+                        : "text-zinc-300 dark:text-zinc-700"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+            <span className="ml-2 text-xs font-semibold text-amber-800 dark:text-amber-300">
+              {formData.rating ? `${formData.rating} / 5 Stars` : "Click star to evaluate"}
+            </span>
+          </div>
         </div>
 
         {/* Recruiter Notes */}

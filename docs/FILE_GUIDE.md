@@ -94,16 +94,20 @@ earlyjobs_ai/
   - **PUT**: Updates candidate details.
   - **DELETE**: Deletes candidate record.
 - [`app/api/candidates/[id]/stage/route.ts`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/app/api/candidates/%5Bid%5D/stage/route.ts):
-  - **PATCH**: Atomically changes candidate stage.
+  - **PATCH**: Atomically changes single candidate stage.
+- [`app/api/candidates/bulk-stage/route.ts`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/app/api/candidates/bulk-stage/route.ts):
+  - **PATCH**: Batch updates stages for multiple candidates in a single transaction.
 - [`app/api/dashboard/route.ts`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/app/api/dashboard/route.ts):
   - **GET**: Aggregates total candidates, active candidates, 6-stage distribution array for Recharts, and 5 recent applicants.
 
 ### Frontend Components
 - [`app/page.tsx`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/app/page.tsx):
-  - Client component coordinating tab switching (`dashboard`, `candidates`, `pipeline`), candidate modals (add, edit, detail, delete), and toast feedback.
+  - Client component coordinating tab switching (`dashboard`, `candidates`, `pipeline`), candidate modals (add, edit, detail, delete), CSV export generation, and bulk actions.
 - [`components/pipeline/pipeline-board.tsx`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/components/pipeline/pipeline-board.tsx):
-  - Visual 6-column pipeline board with direct stage advancement (`ChevronRight`), immediate rejection (`XCircle`), and direct dropdown stage selection.
+  - Visual 6-column pipeline Kanban board with native HTML5 drag-and-drop, scorecards, direct stage advancement, and immediate rejection.
 - [`components/candidates/candidate-table.tsx`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/components/candidates/candidate-table.tsx):
-  - Responsive table showing applicant name, role, experience, contact details, inline stage changer, and edit/delete actions.
+  - Responsive table showing applicant name, role, scorecard stars, multi-selection checkboxes, and a floating bulk action bar.
+- [`components/candidates/candidate-filters.tsx`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/components/candidates/candidate-filters.tsx):
+  - Multi-field search, stage selector, job position selector, and instant CSV spreadsheet export button.
 - [`components/dashboard/stage-chart.tsx`](file:///c:/Users/dheer/OneDrive/Desktop/web%20dev/intership%20assignments/earlyjobs_ai/components/dashboard/stage-chart.tsx):
   - Client-side Recharts bar chart showing candidate breakdown across all stages.
