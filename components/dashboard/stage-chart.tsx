@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from "recharts";
 
 interface StageDistributionItem {
@@ -23,7 +24,7 @@ interface StageChartProps {
 }
 
 const STAGE_COLORS: Record<string, string> = {
-  APPLIED: "#18181b", // Solid Black / Dark Zinc
+  APPLIED: "#0ea5e9", // Sky Blue
   SCREENING: "#f59e0b", // Amber
   INTERVIEW: "#3b82f6", // Blue
   OFFER: "#14b8a6", // Teal
@@ -101,11 +102,17 @@ export function StageChart({ data }: StageChartProps) {
                 return null;
               }}
             />
-            <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+            <Bar dataKey="count" radius={[6, 6, 0, 0]} minPointSize={4}>
+              <LabelList
+                dataKey="count"
+                position="top"
+                offset={6}
+                style={{ fontSize: 11, fontWeight: 700, fill: "#71717a" }}
+              />
               {data.map((entry) => (
                 <Cell
                   key={`cell-${entry.stage}`}
-                  fill={STAGE_COLORS[entry.stage] || "#18181b"}
+                  fill={STAGE_COLORS[entry.stage] || "#0ea5e9"}
                 />
               ))}
             </Bar>

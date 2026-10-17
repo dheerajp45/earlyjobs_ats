@@ -14,10 +14,10 @@ const stageConfig: Record<
 > = {
   APPLIED: {
     label: "Applied",
-    bg: "bg-zinc-100 dark:bg-zinc-800",
-    text: "text-zinc-800 dark:text-zinc-200",
-    border: "border-zinc-200 dark:border-zinc-700",
-    dot: "bg-zinc-500",
+    bg: "bg-sky-50 dark:bg-sky-950/40",
+    text: "text-sky-700 dark:text-sky-300",
+    border: "border-sky-200 dark:border-sky-800",
+    dot: "bg-sky-500",
   },
   SCREENING: {
     label: "Screening",
