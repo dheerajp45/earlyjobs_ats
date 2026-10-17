@@ -1,0 +1,198 @@
+"use client";
+
+import React from "react";
+import { StageBadge } from "@/components/ui/badge";
+import { CandidateStage } from "@/lib/validations/candidate";
+import {
+  Eye,
+  Edit2,
+  Trash2,
+  Mail,
+  Briefcase,
+  Calendar,
+  ExternalLink,
+} from "lucide-react";
+import { CandidateDetailData } from "./candidate-detail-modal";
+
+interface CandidateTableProps {
+  candidates: CandidateDetailData[];
+  onView: (candidate: CandidateDetailData) => void;
+  onEdit: (candidate: CandidateDetailData) => void;
+  onDelete: (candidate: CandidateDetailData) => void;
+  onStageChange: (id: string, stage: CandidateStage) => Promise<void>;
+  loading?: boolean;
+}
+
+const STAGES: { value: CandidateStage; label: string }[] = [
+  { value: "APPLIED", label: "Applied" },
+  { value: "SCREENING", label: "Screening" },
+  { value: "INTERVIEW", label: "Interview" },
+  { value: "OFFER", label: "Offer" },
+  { value: "HIRED", label: "Hired" },
+  { value: "REJECTED", label: "Rejected" },
+];
+
+export function CandidateTable({
+  candidates,
+  onView,
+  onEdit,
+  onDelete,
+  onStageChange,
+  loading,
+}: CandidateTableProps) {
+  if (loading) {
+    return (
+      <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-12 text-center">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" />
+        <p className="mt-3 text-sm text-zinc-500">Loading candidates from database...</p>
+      </div>
+    );
+  }
+
+  if (candidates.length === 0) {
+    return (
+      <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-800 p-12 text-center">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400">
+          <Briefcase className="h-6 w-6" />
+        </div>
+        <h3 className="mt-3 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          No candidates found
+        </h3>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
+          No applicants match your current search or filter criteria. Try clearing filters or create a new candidate.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-zinc-50/80 dark:bg-zinc-800/40 text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 border-b border-zinc-200 dark:border-zinc-800">
+            <tr>
+              <th scope="col" className="px-6 py-3.5 font-semibold">
+                Candidate Name
+              </th>
+              <th scope="col" className="px-6 py-3.5 font-semibold">
+                Position & Experience
+              </th>
+              <th scope="col" className="px-6 py-3.5 font-semibold">
+                Hiring Stage
+              </th>
+              <th scope="col" className="px-6 py-3.5 font-semibold">
+                Applied Date
+              </th>
+              <th scope="col" className="px-6 py-3.5 font-semibold text-right">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
+            {candidates.map((c) => (
+              <tr
+                key={c.id}
+                className="hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30 transition-colors group"
+              >
+                {/* Candidate Name & Email */}
+                <td className="px-6 py-4">
+                  <div className="flex flex-col">
+                    <button
+                      onClick={() => onView(c)}
+                      className="text-left font-semibold text-zinc-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                    >
+                      {c.name}
+                    </button>
+                    <span className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                      <Mail className="h-3 w-3 shrink-0" /> {c.email}
+                    </span>
+                  </div>
+                </td>
+
+                {/* Position & Experience */}
+                <td className="px-6 py-4">
+                  <div className="flex flex-col">
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      {c.position}
+                    </span>
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                      {c.experience !== null && c.experience !== undefined
+                        ? `${c.experience} yr${c.experience === 1 ? "" : "s"} experience`
+                        : "Experience not specified"}
+                    </span>
+                  </div>
+                </td>
+
+                {/* Stage with Direct Selector */}
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <StageBadge stage={c.stage} size="sm" />
+                    <select
+                      value={c.stage}
+                      onChange={(e) =>
+                        onStageChange(c.id, e.target.value as CandidateStage)
+                      }
+                      className="opacity-0 group-hover:opacity-100 text-xs px-2 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-opacity focus:opacity-100"
+                    >
+                      {STAGES.map((s) => (
+                        <option key={s.value} value={s.value}>
+                          Move to {s.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </td>
+
+                {/* Applied Date */}
+                <td className="px-6 py-4 whitespace-nowrap text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {new Date(c.createdAt).toLocaleDateString()}
+                  </span>
+                </td>
+
+                {/* Actions */}
+                <td className="px-6 py-4 text-right whitespace-nowrap">
+                  <div className="flex items-center justify-end gap-1">
+                    {c.resumeUrl && (
+                      <a
+                        href={c.resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 text-zinc-400 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                        title="Open Resume"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
+                    <button
+                      onClick={() => onView(c)}
+                      className="p-1.5 text-zinc-400 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                      title="View Details"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => onEdit(c)}
+                      className="p-1.5 text-zinc-400 hover:text-amber-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                      title="Edit Candidate"
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => onDelete(c)}
+                      className="p-1.5 text-zinc-400 hover:text-rose-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+                      title="Delete Candidate"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

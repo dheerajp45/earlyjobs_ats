@@ -1,69 +1,399 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useState, useEffect, useCallback } from "react";
+import { Sidebar, NavTab } from "@/components/layout/sidebar";
+import { Header } from "@/components/layout/header";
+import { MetricCards } from "@/components/dashboard/metric-cards";
+import { StageChart } from "@/components/dashboard/stage-chart";
+import { RecentCandidates } from "@/components/dashboard/recent-candidates";
+import { CandidateFilters } from "@/components/candidates/candidate-filters";
+import { CandidateTable } from "@/components/candidates/candidate-table";
+import { PipelineBoard } from "@/components/pipeline/pipeline-board";
+import {
+  CandidateFormModal,
+  CandidateFormData,
+} from "@/components/candidates/candidate-form-modal";
+import {
+  CandidateDetailModal,
+  CandidateDetailData,
+} from "@/components/candidates/candidate-detail-modal";
+import { DeleteConfirmModal } from "@/components/candidates/delete-confirm-modal";
+import { CandidateStage } from "@/lib/validations/candidate";
+import { CheckCircle2, AlertCircle, X } from "lucide-react";
+
+interface DashboardMetricsData {
+  totalCandidates: number;
+  activeCandidates: number;
+  stageCounts: Record<CandidateStage, number>;
+  stageDistribution: Array<{ stage: string; label: string; count: number }>;
+  recentCandidates: CandidateDetailData[];
+  distinctPositionsCount: number;
+}
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState<NavTab>("dashboard");
+  const [candidates, setCandidates] = useState<CandidateDetailData[]>([]);
+  const [dashboardMetrics, setDashboardMetrics] =
+    useState<DashboardMetricsData | null>(null);
+
+  // Filters & Search
+  const [search, setSearch] = useState("");
+  const [stageFilter, setStageFilter] = useState("");
+  const [positionFilter, setPositionFilter] = useState("");
+  const [positionsList, setPositionsList] = useState<string[]>([]);
+
+  // Modals & Active Records
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [candidateToEdit, setCandidateToEdit] =
+    useState<CandidateFormData | null>(null);
+
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [candidateToView, setCandidateToView] =
+    useState<CandidateDetailData | null>(null);
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [candidateToDelete, setCandidateToDelete] =
+    useState<CandidateDetailData | null>(null);
+
+  // UI status
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const showNotification = (type: "success" | "error", message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => {
+      setNotification((curr) => (curr?.message === message ? null : curr));
+    }, 4000);
+  };
+
+  // Fetch candidates from /api/candidates
+  const loadCandidates = useCallback(async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (search) params.set("search", search);
+      if (stageFilter) params.set("stage", stageFilter);
+      if (positionFilter) params.set("position", positionFilter);
+      params.set("limit", "100");
+
+      const res = await fetch(`/api/candidates?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch candidates.");
+      const data = await res.json();
+      setCandidates(data.candidates);
+
+      // Extract unique positions for filter dropdown
+      if (!positionFilter && !search && !stageFilter) {
+        const uniquePos: string[] = Array.from(
+          new Set(data.candidates.map((c: any) => c.position))
+        );
+        setPositionsList(uniquePos);
+      }
+    } catch (err: any) {
+      console.error(err);
+      showNotification("error", err.message || "Failed to load candidate list");
+    } finally {
+      setLoading(false);
+    }
+  }, [search, stageFilter, positionFilter]);
+
+  // Fetch dashboard metrics from /api/dashboard
+  const loadDashboard = useCallback(async () => {
+    try {
+      const res = await fetch("/api/dashboard");
+      if (!res.ok) throw new Error("Failed to load dashboard metrics");
+      const data = await res.json();
+      setDashboardMetrics(data);
+    } catch (err: any) {
+      console.error(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCandidates();
+    loadDashboard();
+  }, [loadCandidates, loadDashboard]);
+
+  // Save (Create or Update) Candidate
+  const handleSaveCandidate = async (formData: CandidateFormData) => {
+    const isEdit = Boolean(formData.id);
+    const url = isEdit
+      ? `/api/candidates/${formData.id}`
+      : "/api/candidates";
+    const method = isEdit ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw data;
+    }
+
+    showNotification(
+      "success",
+      isEdit
+        ? `Candidate "${data.name}" updated successfully.`
+        : `Candidate "${data.name}" created successfully.`
+    );
+
+    loadCandidates();
+    loadDashboard();
+  };
+
+  // Update Hiring Stage
+  const handleStageChange = async (id: string, newStage: CandidateStage) => {
+    try {
+      const res = await fetch(`/api/candidates/${id}/stage`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stage: newStage }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to update stage");
+      }
+
+      const updated = await res.json();
+      showNotification(
+        "success",
+        `Stage for "${updated.name}" changed to ${newStage}.`
+      );
+
+      // Optimistically update list
+      setCandidates((prev) =>
+        prev.map((c) => (c.id === id ? { ...c, stage: newStage } : c))
+      );
+      if (candidateToView?.id === id) {
+        setCandidateToView((prev) =>
+          prev ? { ...prev, stage: newStage } : null
+        );
+      }
+
+      loadDashboard();
+    } catch (err: any) {
+      showNotification("error", err.message);
+    }
+  };
+
+  // Delete Candidate
+  const handleDeleteCandidate = async (id: string) => {
+    const res = await fetch(`/api/candidates/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || "Failed to delete candidate");
+    }
+
+    showNotification("success", "Candidate permanently deleted from database.");
+    if (candidateToView?.id === id) {
+      setIsDetailOpen(false);
+      setCandidateToView(null);
+    }
+
+    loadCandidates();
+    loadDashboard();
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex">
+      {/* Sidebar Navigation */}
+      <div className="hidden sm:block">
+        <Sidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onNewCandidate={() => {
+            setCandidateToEdit(null);
+            setIsFormOpen(true);
+          }}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+      </div>
+
+      {/* Main Workspace */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <Header
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onNewCandidate={() => {
+            setCandidateToEdit(null);
+            setIsFormOpen(true);
+          }}
+          candidateCount={candidates.length}
+        />
+
+        {/* Global Toast Notification */}
+        {notification && (
+          <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
+            <div
+              className={`flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-sm font-medium ${
+                notification.type === "success"
+                  ? "bg-emerald-900/90 text-emerald-100 border-emerald-700 backdrop-blur-md"
+                  : "bg-rose-900/90 text-rose-100 border-rose-700 backdrop-blur-md"
+              }`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+              {notification.type === "success" ? (
+                <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+              ) : (
+                <AlertCircle className="h-5 w-5 text-rose-400 shrink-0" />
+              )}
+              <span>{notification.message}</span>
+              <button
+                onClick={() => setNotification(null)}
+                className="ml-2 text-zinc-300 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* View Tabs Content */}
+        <main className="p-6 md:p-8 space-y-6 flex-1 max-w-7xl mx-auto w-full">
+          {activeTab === "dashboard" && (
+            <div className="space-y-6 animate-in fade-in duration-200">
+              {/* Metric Cards */}
+              <MetricCards
+                totalCandidates={dashboardMetrics?.totalCandidates ?? 0}
+                activeCandidates={dashboardMetrics?.activeCandidates ?? 0}
+                hiredCount={dashboardMetrics?.stageCounts?.HIRED ?? 0}
+                distinctPositionsCount={
+                  dashboardMetrics?.distinctPositionsCount ?? 0
+                }
+              />
+
+              {/* Chart & Recent Applicants Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <StageChart
+                  data={dashboardMetrics?.stageDistribution || []}
+                />
+                <RecentCandidates
+                  candidates={dashboardMetrics?.recentCandidates || []}
+                  onView={(c) => {
+                    setCandidateToView(c);
+                    setIsDetailOpen(true);
+                  }}
+                  onViewAll={() => setActiveTab("candidates")}
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === "candidates" && (
+            <div className="space-y-4 animate-in fade-in duration-200">
+              {/* Search & Filters */}
+              <CandidateFilters
+                search={search}
+                stage={stageFilter}
+                position={positionFilter}
+                positionsList={positionsList}
+                onSearchChange={setSearch}
+                onStageChange={setStageFilter}
+                onPositionChange={setPositionFilter}
+                onClearFilters={() => {
+                  setSearch("");
+                  setStageFilter("");
+                  setPositionFilter("");
+                }}
+                totalResults={candidates.length}
+              />
+
+              {/* Candidate Table */}
+              <CandidateTable
+                candidates={candidates}
+                loading={loading}
+                onView={(c) => {
+                  setCandidateToView(c);
+                  setIsDetailOpen(true);
+                }}
+                onEdit={(c) => {
+                  setCandidateToEdit(c);
+                  setIsFormOpen(true);
+                }}
+                onDelete={(c) => {
+                  setCandidateToDelete(c);
+                  setIsDeleteOpen(true);
+                }}
+                onStageChange={handleStageChange}
+              />
+            </div>
+          )}
+
+          {activeTab === "pipeline" && (
+            <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                    Recruitment Funnel
+                  </h3>
+                  <p className="text-xs text-zinc-500">
+                    Track and advance candidates across the 6 hiring stages
+                  </p>
+                </div>
+              </div>
+
+              {/* Kanban Pipeline Board */}
+              <PipelineBoard
+                candidates={candidates}
+                loading={loading}
+                onView={(c) => {
+                  setCandidateToView(c);
+                  setIsDetailOpen(true);
+                }}
+                onStageChange={handleStageChange}
+              />
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* Modals */}
+      <CandidateFormModal
+        isOpen={isFormOpen}
+        candidateToEdit={candidateToEdit}
+        onClose={() => {
+          setIsFormOpen(false);
+          setCandidateToEdit(null);
+        }}
+        onSubmit={handleSaveCandidate}
+      />
+
+      <CandidateDetailModal
+        isOpen={isDetailOpen}
+        candidate={candidateToView}
+        onClose={() => {
+          setIsDetailOpen(false);
+          setCandidateToView(null);
+        }}
+        onEdit={(c) => {
+          setIsDetailOpen(false);
+          setCandidateToEdit(c);
+          setIsFormOpen(true);
+        }}
+        onDelete={(c) => {
+          setCandidateToDelete(c);
+          setIsDeleteOpen(true);
+        }}
+        onStageChange={handleStageChange}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteOpen}
+        candidateName={candidateToDelete?.name || ""}
+        candidateId={candidateToDelete?.id || ""}
+        onClose={() => {
+          setIsDeleteOpen(false);
+          setCandidateToDelete(null);
+        }}
+        onConfirm={handleDeleteCandidate}
+      />
     </div>
   );
 }
