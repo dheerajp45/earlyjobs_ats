@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CandidateStage } from "@/lib/validations/candidate";
 import { CandidateDetailData } from "../candidates/candidate-detail-modal";
 import { StageBadge } from "../ui/badge";
@@ -15,6 +15,8 @@ import {
   Star,
   GripVertical,
   ArrowDown,
+  ChevronsRight,
+  ChevronsLeft,
 } from "lucide-react";
 
 interface PipelineBoardProps {
@@ -42,14 +44,67 @@ export function PipelineBoard({
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverStage, setDragOverStage] = useState<CandidateStage | null>(null);
 
-  if (loading) {
-    return (
-      <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-12 text-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent" />
-        <p className="mt-3 text-sm text-zinc-500">Loading pipeline stages...</p>
-      </div>
-    );
-  }
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollVelocityRef = useRef<number>(0);
+  const animationFrameRef = useRef<number | null>(null);
+
+  // Auto-scroll loop when dragging near horizontal edges
+  const startAutoScroll = () => {
+    if (animationFrameRef.current) return;
+    const scrollLoop = () => {
+      if (scrollContainerRef.current && scrollVelocityRef.current !== 0) {
+        scrollContainerRef.current.scrollLeft += scrollVelocityRef.current;
+      }
+      animationFrameRef.current = requestAnimationFrame(scrollLoop);
+    };
+    animationFrameRef.current = requestAnimationFrame(scrollLoop);
+  };
+
+  const stopAutoScroll = () => {
+    scrollVelocityRef.current = 0;
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      stopAutoScroll();
+    };
+  }, []);
+
+  const handleContainerDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!scrollContainerRef.current) return;
+
+    const rect = scrollContainerRef.current.getBoundingClientRect();
+    const x = e.clientX;
+    const edgeThreshold = 140; // pixels from left or right edge
+
+    if (x > rect.right - edgeThreshold) {
+      // Near right edge: auto-scroll right
+      const intensity = (edgeThreshold - Math.max(0, rect.right - x)) / edgeThreshold;
+      scrollVelocityRef.current = Math.max(6, intensity * 24);
+      startAutoScroll();
+    } else if (x < rect.left + edgeThreshold) {
+      // Near left edge: auto-scroll left
+      const intensity = (edgeThreshold - Math.max(0, x - rect.left)) / edgeThreshold;
+      scrollVelocityRef.current = -Math.max(6, intensity * 24);
+      startAutoScroll();
+    } else {
+      scrollVelocityRef.current = 0;
+    }
+  };
+
+  const scrollBoard = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -380 : 380,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
     e.dataTransfer.setData("text/plain", id);
@@ -58,6 +113,7 @@ export function PipelineBoard({
   };
 
   const handleDragEnd = () => {
+    stopAutoScroll();
     setDraggingId(null);
     setDragOverStage(null);
   };
@@ -80,6 +136,7 @@ export function PipelineBoard({
 
   const handleDrop = async (e: React.DragEvent, targetStage: CandidateStage) => {
     e.preventDefault();
+    stopAutoScroll();
     setDragOverStage(null);
     const candidateId = e.dataTransfer.getData("text/plain") || draggingId;
     setDraggingId(null);
@@ -92,18 +149,98 @@ export function PipelineBoard({
     }
   };
 
+  if (loading) {
+    return (
+      <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-12 text-center">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent" />
+        <p className="mt-3 text-sm text-zinc-500">Loading pipeline stages...</p>
+      </div>
+    );
+  }
+
+  const draggingCandidate = candidates.find((c) => c.id === draggingId);
+
   return (
-    <div className="w-full space-y-2">
-      {/* Visual Instruction Bar */}
+    <div className="w-full space-y-3">
+      {/* Top Action Bar with Instructions and Scroll Arrows */}
       <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 px-1">
         <span className="flex items-center gap-1.5 font-medium">
           <GripVertical className="h-3.5 w-3.5 text-indigo-500" />
-          <span>Tip: <strong>Drag and drop</strong> cards between columns to change stages, or use quick action buttons.</span>
+          <span>
+            <strong>Drag cards</strong> between columns. Drag near edges or use scroll buttons to view off-screen stages.
+          </span>
         </span>
+
+        {/* Manual Scroll Buttons */}
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => scrollBoard("left")}
+            className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Scroll Kanban Left"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollBoard("right")}
+            className="p-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Scroll Kanban Right"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
-      <div className="w-full overflow-x-auto pb-4">
-        <div className="flex gap-4 min-w-[1200px]">
+      {/* Quick-Drop Target Strip (Visible when card is in the air) */}
+      {draggingId && (
+        <div className="p-3 bg-indigo-50/90 dark:bg-indigo-950/60 border-2 border-indigo-300 dark:border-indigo-700 rounded-2xl shadow-lg flex flex-wrap items-center justify-between gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="flex items-center gap-2 text-xs font-semibold text-indigo-950 dark:text-indigo-200">
+            <span className="inline-block h-2 w-2 rounded-full bg-indigo-600 animate-ping" />
+            <span>
+              Moving <strong>{draggingCandidate?.name}</strong>: Drop onto any target below:
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            {STAGES_ORDER.map((stageObj) => {
+              const isTargetOver = dragOverStage === stageObj.key;
+              const isCurrentStage = draggingCandidate?.stage === stageObj.key;
+
+              return (
+                <div
+                  key={stageObj.key}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                    setDragOverStage(stageObj.key);
+                  }}
+                  onDragLeave={() => setDragOverStage(null)}
+                  onDrop={(e) => handleDrop(e, stageObj.key)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border flex items-center gap-1 ${
+                    isTargetOver
+                      ? "bg-indigo-600 text-white border-indigo-600 scale-110 shadow-md ring-2 ring-indigo-300"
+                      : isCurrentStage
+                      ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 border-dashed border-zinc-300 dark:border-zinc-700 opacity-60"
+                      : "bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border-zinc-200 dark:border-zinc-700 hover:border-indigo-500 hover:shadow-xs"
+                  }`}
+                >
+                  <span>{stageObj.label}</span>
+                  {isCurrentStage && <span className="text-[10px] font-normal">(current)</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Main Horizontal Scrollable Kanban Container with Edge Detection */}
+      <div
+        ref={scrollContainerRef}
+        onDragOver={handleContainerDragOver}
+        className="w-full overflow-x-auto pb-4 scroll-smooth"
+      >
+        <div className="flex gap-4 min-w-[1300px]">
           {STAGES_ORDER.map((stageObj, idx) => {
             const stageCandidates = candidates.filter(
               (c) => c.stage === stageObj.key
@@ -116,7 +253,7 @@ export function PipelineBoard({
                 onDragOver={(e) => handleDragOver(e, stageObj.key)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, stageObj.key)}
-                className={`flex-1 min-w-[230px] rounded-2xl flex flex-col max-h-[75vh] transition-all duration-200 border ${
+                className={`flex-1 min-w-[240px] rounded-2xl flex flex-col max-h-[75vh] transition-all duration-200 border ${
                   isColumnOver
                     ? "bg-indigo-50/80 dark:bg-indigo-950/40 border-indigo-400 dark:border-indigo-600 ring-2 ring-indigo-400/50 shadow-md scale-[1.01]"
                     : "bg-zinc-50/70 dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800"
@@ -161,7 +298,7 @@ export function PipelineBoard({
                           onDragEnd={handleDragEnd}
                           className={`bg-white dark:bg-zinc-900 rounded-xl p-3 border transition-all duration-150 flex flex-col justify-between cursor-grab active:cursor-grabbing select-none ${
                             isDragging
-                              ? "opacity-40 border-indigo-400 ring-2 ring-indigo-400 shadow-lg scale-95"
+                              ? "opacity-30 border-indigo-400 ring-2 ring-indigo-400 shadow-lg scale-95"
                               : "border-zinc-200 dark:border-zinc-800 shadow-xs hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700"
                           }`}
                         >
@@ -179,7 +316,7 @@ export function PipelineBoard({
                               </div>
                               <button
                                 onClick={() => onView(candidate)}
-                                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1 shrink-0"
+                                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1 shrink-0 cursor-pointer"
                                 title="View candidate details"
                               >
                                 <Eye className="h-3.5 w-3.5" />
