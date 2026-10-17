@@ -109,7 +109,10 @@ export function PipelineBoard({
   const handleDragStart = (e: React.DragEvent, id: string) => {
     e.dataTransfer.setData("text/plain", id);
     e.dataTransfer.effectAllowed = "move";
-    setDraggingId(id);
+    // Defer state update by one event tick so browser finishes capturing drag ghost image
+    setTimeout(() => {
+      setDraggingId(id);
+    }, 0);
   };
 
   const handleDragEnd = () => {
@@ -194,7 +197,7 @@ export function PipelineBoard({
 
       {/* Quick-Drop Target Strip (Visible when card is in the air) */}
       {draggingId && (
-        <div className="p-3 bg-zinc-900 dark:bg-zinc-800 text-white rounded-2xl shadow-xl border border-zinc-800 dark:border-zinc-700 flex flex-wrap items-center justify-between gap-2 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 max-w-4xl w-[94vw] sm:w-auto p-3 bg-zinc-900 text-white rounded-2xl shadow-2xl border border-zinc-800 flex flex-wrap items-center justify-between gap-3 animate-in fade-in zoom-in-95 duration-150">
           <div className="flex items-center gap-2 text-xs font-semibold text-zinc-100">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
             <span>
