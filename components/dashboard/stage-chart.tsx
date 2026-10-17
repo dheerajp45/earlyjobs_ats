@@ -23,7 +23,7 @@ interface StageChartProps {
 }
 
 const STAGE_COLORS: Record<string, string> = {
-  APPLIED: "#71717a", // Slate / Zinc
+  APPLIED: "#18181b", // Solid Black / Dark Zinc
   SCREENING: "#f59e0b", // Amber
   INTERVIEW: "#3b82f6", // Blue
   OFFER: "#14b8a6", // Teal
@@ -85,6 +85,7 @@ export function StageChart({ data }: StageChartProps) {
               tick={{ fill: "#71717a", fontSize: 11 }}
             />
             <Tooltip
+              cursor={false}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const item = payload[0].payload as StageDistributionItem;
